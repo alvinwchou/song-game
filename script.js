@@ -68,11 +68,36 @@ songApp.getTopTracks = (id) => {
     }).then(data => songApp.displayTracks(data.tracks))
 }
 
+songApp.displayTracks = (tracks) => {
+    console.log('displayTracks', tracks)
 
+    tracks.forEach(track => {
+        const divElement =
+            `<div>
+                <audio src="${track.preview_url}" controls></audio>
+                <form action="">
+                    <label for="">${track.name}</label>
+                    <input type="text">
+                </form>
+            </div>`
+
+        $('.topSongs').append(divElement);
+    })
+}
+
+// events
+songApp.eventListenerSetups = () => {
+    $('form').on('submit', (e) => {
+        e.preventDefault();
+        songApp.artistName = $('#artistName').val();
+        songApp.getArtistId(songApp.artistName);
+    })
+}
 
 //document ready
 $(() => {
     console.log('doc is ready')
     songApp.getToken();
+    songApp.eventListenerSetups();
 
 })
