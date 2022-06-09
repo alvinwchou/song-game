@@ -38,7 +38,35 @@ songApp.getToken = () => {
     })
 }
 
+// method to get artist id
+songApp.getArtistId = (query) => {
+    $.ajax({
+        url: songApp.spotifyUrl + '/search',
+        dataType: 'json',
+        data: {
+            q: query,
+            type: 'artist'
+        },
+        headers: {
+            'Authorization': `Bearer ${songApp.token}`
+        },
+    }).then(data => songApp.getTopTracks(data.artists.items[0].id)) // we need to create another method to check if the first item return match's user's query term, if not show a list. But for now assume it matches
+}
 
+// method to get artist's top tracks
+songApp.getTopTracks = (id) => {
+    const endpoint = `/artists/${id}/top-tracks`
+    $.ajax({
+        url: songApp.spotifyUrl + endpoint,
+        dataType: 'json',
+        data: {
+            market: 'US'
+        },
+        headers: {
+            'Authorization': `Bearer ${songApp.token}`
+        },
+    }).then(data => songApp.displayTracks(data.tracks))
+}
 
 
 
