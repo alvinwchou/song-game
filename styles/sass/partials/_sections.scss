@@ -6,6 +6,7 @@
 html {
     background-color: #FFF8DB;
 }
+
 body {
     border: 1px solid red;
     width: min(95vw, 1000px);
@@ -35,5 +36,10 @@ body {
     border: 1px solid black;
     height: 50vh;
     margin: 20px;
+    background-color: #FFF;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
 }
 

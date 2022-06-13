@@ -254,4 +254,9 @@ body {
   border: 1px solid black;
   height: 50vh;
   margin: 20px;
+  background-color: #FFF;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
 }/*# sourceMappingURL=style.css.map */

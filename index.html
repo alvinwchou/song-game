@@ -12,14 +12,18 @@
     <main>
         <section class="topSection">
             <h1>What's the name of that song?</h1>
-            <p>Pick an artist and we will grab their top 10 tracks.</p>
-            <p>Hit start and the game begins.</p>
-            <p>A song will play and you have 30 seconds to guess the name of it.</p>
-            <form action="">
-                <label for="artistName" class="sr-only">Artist Name</label>
-                <input type="text" placeholder="Artist name" id="artistName">
-                <input type="button" value="Go">
-            </form>
+            <div class="instructions">
+                <div class="instructionText">
+                    <p>Pick an artist and we will grab their top 10 tracks.</p>
+                    <p>Hit start and the game begins.</p>
+                    <p>A song will play and you have 30 seconds to guess the name of it.</p>
+                </div>
+                <form action="">
+                    <label for="artistName" class="sr-only">Artist Name</label>
+                    <input type="text" placeholder="Artist name" id="artistName">
+                    <input type="submit" value="Go">
+                </form>
+            </div>
         </section>
 
         <section class="startGame">
@@ -29,18 +33,20 @@
 
         <section class="game">
             <div class="topSongs">
-                <!-- <div>
-                        <audio src="" controls></audio>
+                <!-- <div class='song'>
+                        <h2>Song ${index+1} of 10 playing</h2>
                         <form action="">
-                            <label for=""></label>
-                            <input type="text">
+                            <label for="${track.name}">${track.name}</label>
+                            <input type="text" class='userGuess' id='${track.name}' placeholder='Your Guess' disabled>
                         </form>
+                        <audio src="${track.preview_url}"></audio>
                         // might add a timer here
                     </div> -->
             </div>
 
             <div class="results">
                 <h2></h2>
+                <button>Try again</button>
             </div>
         </section>
     </main>

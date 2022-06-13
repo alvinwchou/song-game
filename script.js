@@ -54,7 +54,10 @@ $(() => {
             headers: {
                 'Authorization': `Bearer ${songApp.token}`
             },
-        }).then(data => songApp.getTopTracks(data.artists.items[0].id)) // we need to create another method to check if the first item return match's user's query term, if not show a list. But for now assume it matches
+        }).then(data => {
+            songApp.getTopTracks(data.artists.items[0].id)
+            $('.startGame h2')[0].innerText = `${data.artists.items[0].name} - Top 10 Tracks`
+        }) // we need to create another method to check if the first item return match's user's query term, if not show a list. But for now assume it matches
     }
 
     // method to get artist's top tracks
@@ -79,11 +82,12 @@ $(() => {
         tracks.forEach((track, index) => {
             const divElement =
                 `<div class='song'>
-                    <audio src="${track.preview_url}" controls></audio>
+                    <h2>Song ${index+1} of 10 playing</h2>
                     <form action="">
-                        <label for="${track.name}">${track.name}</label>
-                        <input type="text" class='userGuess' id='${track.name}' disabled>
+                    <label for="${track.name}">${track.name}</label>
+                    <input type="text" class='userGuess' id='${track.name}' placeholder='Your Guess' disabled>
                     </form>
+                    <audio src="${track.preview_url}"></audio>
                 </div>`
                 
                 $('.topSongs').append(divElement);
@@ -93,21 +97,30 @@ $(() => {
         $('audio').each(function() {$(this)[0].volume = 0.2})
 
         // add eventListener to each div element
-        $('.userGuess').on('focus', (e) => e.currentTarget.parentElement.previousElementSibling.play())
+        $('.userGuess').on('focus', (e) => e.currentTarget.parentElement.nextElementSibling.play())
         // $('.userGuess').on('focusout', (e) => e.currentTarget.parentElement.previousElementSibling.pause())
 
+        // eventListener for when user guess is submitted
         $('form').on('submit', (e) => {
             e.preventDefault()
             
             // if there is no next element or if the next element isnt a song div
             if (!e.currentTarget.parentElement.nextSibling || e.currentTarget.parentElement.nextSibling.className !== 'song') {
                 e.currentTarget.children[1].disabled = true;
-                e.currentTarget.previousElementSibling.pause();
+                e.currentTarget.nextElementSibling.pause();
+                console.log('end of game')
                 songApp.tallyScore();
             } else {
-                console.log(e.currentTarget.parentElement.nextSibling)
-                e.currentTarget.children[1].disabled = true;
-                e.currentTarget.previousElementSibling.pause();
+                
+                e.currentTarget.children[1].disabled = true; // disable text input
+                e.currentTarget.nextElementSibling.pause(); // pause audio
+                // scroll to next song div
+                e.currentTarget.parentElement.nextSibling.scrollIntoView({
+                    behavior: 'auto',
+                    block: 'center',
+                    inline: 'center'
+                });
+                // enable and focus next text input
                 e.currentTarget.parentElement.nextSibling.children[1].children[1].disabled = false;
                 e.currentTarget.parentElement.nextSibling.children[1].children[1].focus();
             }
@@ -116,10 +129,10 @@ $(() => {
 
     // events
     songApp.eventListenerSetups = () => {
+        // get user query for artist
         $('form').on('submit', (e) => {
             e.preventDefault();
-            songApp.artistName = $('#artistName').val();
-            songApp.getArtistId(songApp.artistName);
+            songApp.getArtistId($('#artistName').val());
         })
     }
 
@@ -135,7 +148,6 @@ $(() => {
     songApp.tallyScore = () => {
         songApp.score = 0;
         $('.song .userGuess').each(function() {
-            // if user input = song name
             // some song titles includes (feat.), we got to take everything before ' (feat.'
             let songTitle;
             if ($(this)[0].id.match('feat')) {
@@ -149,7 +161,9 @@ $(() => {
                 songApp.score++
             }
         })
-
+        console.log($('.results h2'))
+        $('.results h2')[0].innerText = `${songApp.score} out of 10 correct.`
+        
     }
 
     // function that play the song when the text input is focused
