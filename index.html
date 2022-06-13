@@ -8,20 +8,22 @@
     <title>What's the name of that song?</title>
 </head>
 <body>
-    <header>
-        <h1>What's the name of that song?</h1>
-        <p>Pick an artist and we will grab their top 10 tracks. Hit start and the game begins. A song will play and you have 30 seconds to guess the name of it.</p>
-    </header>
-
+    
     <main>
-        <form action="">
-            <label for="artistName" class="sr-only">Artist Name</label>
-            <input type="text" placeholder="Artist name" id="artistName">
-            <input type="button" value="Go">
-        </form>
+        <section class="topSection">
+            <h1>What's the name of that song?</h1>
+            <p>Pick an artist and we will grab their top 10 tracks.</p>
+            <p>Hit start and the game begins.</p>
+            <p>A song will play and you have 30 seconds to guess the name of it.</p>
+            <form action="">
+                <label for="artistName" class="sr-only">Artist Name</label>
+                <input type="text" placeholder="Artist name" id="artistName">
+                <input type="button" value="Go">
+            </form>
+        </section>
 
-        <section>
-            <h2></h2> <!-- Artist Name Top 10 song -->
+        <section class="startGame">
+            <h2>*Artist Name* Top 10 Tracks</h2>
             <button>Start</button>
         </section>
 
