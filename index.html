@@ -8,25 +8,44 @@
     <title>What's the name of that song?</title>
 </head>
 <body>
+    <header>
+        <h1>What's the name of that song?</h1>
+        <p>Pick an artist and we will grab their top 10 tracks. Hit start and the game begins. A song will play and you have 30 seconds to guess the name of it.</p>
+    </header>
+
     <main>
         <form action="">
-            <label for="artistName">Artist Name</label>
-            <input type="text" id="artistName">
+            <label for="artistName" class="sr-only">Artist Name</label>
+            <input type="text" placeholder="Artist name" id="artistName">
+            <input type="button" value="Go">
         </form>
 
-        <button>Start guessing</button>
+        <section>
+            <h2></h2> <!-- Artist Name Top 10 song -->
+            <button>Start</button>
+        </section>
 
-        <section class="topSongs">
-            <!-- <div>
-                    <audio src="" controls></audio>
-                    <form action="">
-                        <label for=""></label>
-                        <input type="text">
-                    </form>
-                    // might add a timer here
-                </div> -->
+        <section class="game">
+            <div class="topSongs">
+                <!-- <div>
+                        <audio src="" controls></audio>
+                        <form action="">
+                            <label for=""></label>
+                            <input type="text">
+                        </form>
+                        // might add a timer here
+                    </div> -->
+            </div>
+
+            <div class="results">
+                <h2></h2>
+            </div>
         </section>
     </main>
+
+    <footer>
+        <p>Developed by <a href="https://www.alvinwchou.com/">Alvin Chou</a>.</p>
+    </footer>
 
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="./script.js"></script>
