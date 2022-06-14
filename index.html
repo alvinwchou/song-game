@@ -13,16 +13,22 @@
         <section class="topSection">
             <h1>What's the name of that song?</h1>
             <div class="instructions">
-                <div class="instructionText">
-                    <p>Pick an artist and we will grab their top 10 tracks.</p>
-                    <p>Hit start and the game begins.</p>
-                    <p>A song will play and you have 30 seconds to guess the name of it.</p>
+                <h3>How to play</h3>
+                <ol>
+                    <li><p>Thinking of an artist and enter it in the search bar</p></li>
+                    <li><p>Hit the start button to begin the game</p></li>
+                    <li><p>Each song will only play for 30 seconds</p></li>
+                    <li><p>Type in the song name as you know the song name</p></li>
+                </ol>
+
+                <div class="search">
+                    <form action="">
+                        <label for="artistName" class="sr-only">Artist Name</label>
+                        <input type="text" placeholder="Artist name" id="artistName">
+                        <input type="submit" value="Go">
+                    </form>
+                    <img>
                 </div>
-                <form action="">
-                    <label for="artistName" class="sr-only">Artist Name</label>
-                    <input type="text" placeholder="Artist name" id="artistName">
-                    <input type="submit" value="Go">
-                </form>
             </div>
         </section>
 

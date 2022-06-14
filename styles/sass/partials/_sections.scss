@@ -23,6 +23,49 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
+    .instructions{
+        width: 90%;
+        display: grid;
+        grid-template-columns: 1fr 200px;
+        gap: 1rem;
+        grid-template-areas:
+            'header x'
+            'text search'
+        ;
+        h3 {
+            grid-area: header;
+        }
+        ol {
+            grid-area: text;
+        }
+        .search {
+            grid-area: search;
+            margin: 1rem 0;
+        }
+        input {
+            margin: 1rem 0;
+        }
+        img {
+            width: 100%;
+        }
+        *{border: 1px solid red;}
+    }
+    .instructionsText {
+        width: 100%;
+    }
+    .instructionsSearch {
+        width: 300px;
+    }
+    h3 {
+        text-align: center;
+    }
+    ol {
+        padding: 0;
+        list-style-position: inside;
+        p {
+            display: inline-block;
+        }
+    }
     form {
         display: flex;
         justify-content: center;

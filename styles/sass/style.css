@@ -245,6 +245,48 @@ body {
   flex-direction: column;
   align-items: center;
 }
+.topSection .instructions {
+  width: 90%;
+  display: grid;
+  grid-template-columns: 1fr 200px;
+  gap: 1rem;
+  grid-template-areas: "header x" "text search";
+}
+.topSection .instructions h3 {
+  grid-area: header;
+}
+.topSection .instructions ol {
+  grid-area: text;
+}
+.topSection .instructions .search {
+  grid-area: search;
+  margin: 1rem 0;
+}
+.topSection .instructions input {
+  margin: 1rem 0;
+}
+.topSection .instructions img {
+  width: 100%;
+}
+.topSection .instructions * {
+  border: 1px solid red;
+}
+.topSection .instructionsText {
+  width: 100%;
+}
+.topSection .instructionsSearch {
+  width: 300px;
+}
+.topSection h3 {
+  text-align: center;
+}
+.topSection ol {
+  padding: 0;
+  list-style-position: inside;
+}
+.topSection ol p {
+  display: inline-block;
+}
 .topSection form {
   display: flex;
   justify-content: center;
