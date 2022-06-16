@@ -55,12 +55,12 @@ songApp.getArtistId = (query) => {
         console.log(data.artists.items[0].images[0].url)
         $('.startGame h2')[0].innerText = `${data.artists.items[0].name} - Top 10 Tracks`
 
-        $('.search button').remove();
+        $('.search div').remove();
         $('.search').append(`
-            <button>
+            <div>
                 <img src="${data.artists.items[0].images[0].url}" alt="Image of ${data.artists.items[0].name}">
-                <p>Start</p>
-            </button>
+                <button>Start</button>
+            </div>
         `)
     }) // we need to create another method to check if the first item return match's user's query term, if not show a list. But for now assume it matches
 }
@@ -87,8 +87,8 @@ songApp.displayTracks = (tracks) => {
     tracks.forEach((track, index) => {
         const divElement =
             `<div class='song'>
-                <h2>Song ${index+1} of 10 playing</h2>
-                <form action="">
+            <h2>Song ${index+1} of 10 playing</h2>
+            <form action="">
                 <label for="${track.name}">${track.name}</label>
                 <input type="text" class='userGuess' id='${track.name}' placeholder='Your Guess' disabled>
                 </form>
@@ -102,9 +102,10 @@ songApp.displayTracks = (tracks) => {
     $('audio').each(function() {$(this)[0].volume = 0.2})
 
     // add eventListener to each div element
+    //play the song when the text input is focused
     $('.userGuess').on('focus', (e) => e.currentTarget.parentElement.nextElementSibling.play())
     // $('.userGuess').on('focusout', (e) => e.currentTarget.parentElement.previousElementSibling.pause())
-
+    
     // eventListener for when user guess is submitted
     $('form').on('submit', (e) => {
         e.preventDefault()
@@ -140,9 +141,8 @@ songApp.eventListenerSetups = () => {
         songApp.getArtistId($('#artistName').val());
     })
 
-    // function that play the song when the text input is focused
-    $('button').on('click', () => songApp.startGame())
-
+    $('.search button').on('click', () => songApp.startGame())
+    
     // start the game
     $('.search').on('click', (e) => {
         if (e.target.tagName === 'BUTTON' || e.target.parentElement.tagName === 'BUTTON' && songApp.newGame) {
@@ -183,12 +183,12 @@ songApp.tallyScore = () => {
         if ($(this)[0].value.toLowerCase() === songTitle.toLowerCase()) {
             songApp.score++
         }
-        $('.results .songTitles').append(`<li>${songTitle}</li>`);
-        $('.results .userAnswers').append(`<li>${$(this)[0].value}</li>`);
+        $('.results .songTitles').append(`<li><p>${songTitle}</p></li>`);
+        $('.results .userAnswers').append(`<li><p>${$(this)[0].value}</p></li>`);
         
     })
     console.log($('.results h2'))
-    $('.results h2')[0].innerText = `${songApp.score} out of 10 correct.`;
+    $('.results h2')[0].innerText = `${songApp.score} out of 10 correct`;
     const scorePhrase = [
         'Nice Try',
         'Nice Try',

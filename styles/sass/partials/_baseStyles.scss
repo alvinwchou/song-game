@@ -1,0 +1,44 @@
+// baseStyles
+
+* {
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    font-size: 125%;
+    background-color: #FFF8DB;
+}
+
+body {
+    border: 1px solid red;
+    width: min(95vw, 1200px);
+    margin: 0 auto;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+ol {
+    padding: 0;
+    list-style-position: inside;
+
+    p {
+        display: inline-block;
+    }
+}
+
+img {
+    width: 100%;
+    display: block;
+}
+
+button, input[type=submit] {
+    background-color: #A4BCC0;
+    border-radius: 10px;
+}
+
+button {
+    padding: 0.1rem 1rem;
+}
