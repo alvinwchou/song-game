@@ -230,6 +230,7 @@ template {
 * {
   margin: 0;
   padding: 0;
+  scroll-behavior: smooth;
 }
 
 html {
@@ -267,6 +268,12 @@ button, input[type=submit] {
 
 button {
   padding: 0.1rem 1rem;
+}
+
+input[type=text] {
+  border: 5px solid #BEE4E8;
+  border-radius: 15px;
+  padding: 0 1rem;
 }
 
 html {
@@ -339,6 +346,8 @@ footer {
 .topSection img {
   width: 200px;
   margin: 1rem auto;
+  border: 5px solid #BEE4E8;
+  border-radius: 15px;
 }
 .topSection form {
   display: flex;
@@ -346,6 +355,24 @@ footer {
 }
 .topSection form input {
   width: 100%;
+}
+.topSection .start {
+  position: relative;
+}
+.topSection .countdown {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 230px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.topSection .countdown p {
+  font-size: 10rem;
+  text-shadow: 0px 0px 20px #BEE4E8;
+  line-height: 0;
 }
 
 .startGame {
@@ -365,11 +392,6 @@ footer {
 
 .song {
   height: 50vh;
-}
-.song input {
-  border: 5px solid #BEE4E8;
-  border-radius: 15px;
-  padding: 0 1rem;
 }
 
 .results {

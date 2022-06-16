@@ -31,7 +31,6 @@
             grid-area: search;
             text-align: center;
         }
-        // *{border: 1px solid red;}
     }
     input {
         margin: 2rem 0;
@@ -46,12 +45,32 @@
     img {
         width: 200px;
         margin: 1rem auto;
+        border: 5px solid #BEE4E8;
+        border-radius: 15px;
     }
     form {
         display: flex;
         justify-content: center;
         input {
             width: 100%;
+        }
+    }
+    .start {
+        position: relative;
+    }
+    .countdown {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 230px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        p {
+            font-size: 10rem;
+            text-shadow: 0px 0px 20px #BEE4E8;
+            line-height: 0;
         }
     }
 }
@@ -65,7 +84,6 @@
 .song, .results {
     margin: 20px;
     background-color: #FFF;
-    // border: 1px solid red;
     border-radius: 20px;
     box-shadow: 0px 0px 10px 1px #000000;
     display: flex;
@@ -77,11 +95,6 @@
 
 .song {
     height: 50vh;
-    input {
-        border: 5px solid #BEE4E8;
-        border-radius: 15px;
-        padding: 0 1rem;
-    }
 }
 
 // results

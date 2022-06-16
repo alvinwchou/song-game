@@ -1,12 +1,6 @@
 // create an app object (to make use of namespacing)
 const songApp = {};
 
-// save information within properties on the app object
-songApp.spotifyUrl = 'https://api.spotify.com/v1';
-songApp.tokenUrl = 'https://accounts.spotify.com/api/token';
-songApp.clientId = 'b6484d277d954668b083a54f44f00323';
-songApp.clientSecret = '3c2a90eda1a0484e8ec1a63a28f98736';
-
 songApp.getToken = () => {
     $.ajax({
         url: songApp.tokenUrl,
@@ -57,7 +51,7 @@ songApp.getArtistId = (query) => {
 
         $('.search div').remove();
         $('.search').append(`
-            <div>
+            <div class="start">
                 <img src="${data.artists.items[0].images[0].url}" alt="Image of ${data.artists.items[0].name}">
                 <button>Start</button>
             </div>
@@ -107,30 +101,7 @@ songApp.displayTracks = (tracks) => {
     // $('.userGuess').on('focusout', (e) => e.currentTarget.parentElement.previousElementSibling.pause())
     
     // eventListener for when user guess is submitted
-    $('form').on('submit', (e) => {
-        e.preventDefault()
-        
-        // if there is no next element or if the next element isnt a song div
-        if (!e.currentTarget.parentElement.nextSibling || e.currentTarget.parentElement.nextSibling.className !== 'song') {
-            e.currentTarget.children[1].disabled = true;
-            e.currentTarget.nextElementSibling.pause();
-            console.log('end of game')
-            songApp.tallyScore();
-        } else {
-            
-            e.currentTarget.children[1].disabled = true; // disable text input
-            e.currentTarget.nextElementSibling.pause(); // pause audio
-            // scroll to next song div
-            e.currentTarget.parentElement.nextSibling.scrollIntoView({
-                behavior: 'auto',
-                block: 'center',
-                inline: 'center'
-            });
-            // enable and focus next text input
-            e.currentTarget.parentElement.nextSibling.children[1].children[1].disabled = false;
-            e.currentTarget.parentElement.nextSibling.children[1].children[1].focus();
-        }
-    })
+    $('form').on('submit', (e) => songApp.nextSong(e))
 }
 
 // events
@@ -141,35 +112,98 @@ songApp.eventListenerSetups = () => {
         songApp.getArtistId($('#artistName').val());
     })
 
-    $('.search button').on('click', () => songApp.startGame())
-    
-    // start the game
+    // run startGame method
     $('.search').on('click', (e) => {
-        if (e.target.tagName === 'BUTTON' || e.target.parentElement.tagName === 'BUTTON' && songApp.newGame) {
+        if (e.target.tagName === 'BUTTON' && songApp.newGame) {
             songApp.newGame = false; // this stops the user from starting over 
-            $('.button').disabled = true;
-            songApp.displayTracks(songApp.tracks);
-            songApp.startGame();
+            songApp.startGameCountdown();
         }
+    })
+
+    // try again
+    $('#tryAgain').on('click', () => {
+        $(window).scrollTop(0);
+        songApp.startGameCountdown();
+    })
+    
+    // new artist
+    $('#newArtist').on('click', () => {
+        $('#artistName').val('').focus();
+        $(window).scrollTop(0);
     })
 }
 
+// start the game
 songApp.startGame = () => {
-    console.log('start game')
+    songApp.displayTracks(songApp.tracks);
+
     // enable text input and focus
     if ($('.userGuess')[0]) {
         $('.userGuess')[0].disabled = false;
         $('.userGuess')[0].focus();
         $('.userGuess')[0].scrollIntoView({
-            behavior: 'auto',
             block: 'center',
             inline: 'center'
         });
     }
 }
 
+// 3 secs to get ready before game starts
+songApp.startGameCountdown = () => {
+    let count = 3;
+
+    const countdown = setInterval(() => {
+        $('.countdown').remove();
+        const divEl = `
+        <div class="countdown">
+        <p>${count}</p>
+        </div>
+        `
+        
+        $('.start').append(divEl);
+        
+        count--;
+        
+        if (count < 0) {
+            clearInterval(countdown);
+            $('.countdown').remove();
+            songApp.startGame();
+        }
+        
+    }, 1000)
+    
+}
+
+// play next song
+songApp.nextSong = (e) => {
+    e.preventDefault()
+
+    // if there is no next element or if the next element isnt a song div
+    if (!e.currentTarget.parentElement.nextSibling || e.currentTarget.parentElement.nextSibling.className !== 'song') {
+        e.currentTarget.children[1].disabled = true;
+        e.currentTarget.nextElementSibling.pause();
+        console.log('end of game')
+        songApp.tallyScore();
+    } else {
+
+        e.currentTarget.children[1].disabled = true; // disable text input
+        e.currentTarget.nextElementSibling.pause(); // pause audio
+        // enable and focus next text input
+        e.currentTarget.parentElement.nextSibling.children[1].children[1].disabled = false;
+        e.currentTarget.parentElement.nextSibling.children[1].children[1].focus();
+        // orginally these 2 lines 👆 were below the scrollIntoView. which caused smooth scrolling issues
+        // scroll to next song div
+        e.currentTarget.parentElement.nextSibling.scrollIntoView({
+            block: 'center',
+            inline: 'center'
+        });
+    }
+}
+
+// tally up the score
 songApp.tallyScore = () => {
     songApp.score = 0;
+    $('.results ol').empty()
     $('.song .userGuess').each(function() {
         let songTitle;
         // some song titles includes (feat.), we got to take everything before ' (feat.'
@@ -204,7 +238,6 @@ songApp.tallyScore = () => {
     $('.results h2')[1].innerText = `${scorePhrase[songApp.score]}`;
     $('.results')[0].style.display = 'flex';
     $('.results')[0].scrollIntoView({
-        behavior: 'auto',
         block: 'center',
         inline: 'center'
     });
@@ -212,6 +245,11 @@ songApp.tallyScore = () => {
 
 
 songApp.init = () => {
+    // save information within properties on the app object
+    songApp.spotifyUrl = 'https://api.spotify.com/v1';
+    songApp.tokenUrl = 'https://accounts.spotify.com/api/token';
+    songApp.clientId = 'b6484d277d954668b083a54f44f00323';
+    songApp.clientSecret = '3c2a90eda1a0484e8ec1a63a28f98736';
     songApp.getToken();
     songApp.eventListenerSetups();
     songApp.newGame = true;

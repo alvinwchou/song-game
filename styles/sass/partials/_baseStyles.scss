@@ -3,6 +3,7 @@
 * {
     margin: 0;
     padding: 0;
+    scroll-behavior: smooth;
 }
 
 html {
@@ -41,4 +42,10 @@ button, input[type=submit] {
 
 button {
     padding: 0.1rem 1rem;
+}
+
+input[type=text] {
+    border: 5px solid #BEE4E8;
+    border-radius: 15px;
+    padding: 0 1rem;
 }
