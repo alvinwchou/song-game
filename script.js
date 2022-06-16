@@ -101,7 +101,16 @@ songApp.displayTracks = (tracks) => {
     // $('.userGuess').on('focusout', (e) => e.currentTarget.parentElement.previousElementSibling.pause())
     
     // eventListener for when user guess is submitted
-    $('form').on('submit', (e) => songApp.nextSong(e))
+    $('form').on('submit', function(e)  {
+        e.preventDefault();
+        const event = e
+
+        if (songApp.guessCheck(this)) {
+            songApp.nextSong(event);
+        } else {
+            this[0].value = ''
+        }
+    })
 }
 
 // events
@@ -116,6 +125,7 @@ songApp.eventListenerSetups = () => {
     $('.search').on('click', (e) => {
         if (e.target.tagName === 'BUTTON' && songApp.newGame) {
             songApp.newGame = false; // this stops the user from starting over 
+            songApp.score = 0;
             songApp.startGameCountdown();
         }
     })
@@ -176,7 +186,6 @@ songApp.startGameCountdown = () => {
 
 // play next song
 songApp.nextSong = (e) => {
-    e.preventDefault()
 
     // if there is no next element or if the next element isnt a song div
     if (!e.currentTarget.parentElement.nextSibling || e.currentTarget.parentElement.nextSibling.className !== 'song') {
@@ -200,9 +209,28 @@ songApp.nextSong = (e) => {
     }
 }
 
+songApp.guessCheck = function(element) {
+    console.log('guesschekc', element)
+    let songTitle;
+    // some song titles includes (feat.), we got to take everything before ' (feat.'
+    if (element[0].id.match('feat')) {
+        songTitle = /.+?(?= \(feat.)/.exec(element[0].id)[0];
+    } else {
+        songTitle = element[0].id;
+    }
+    console.log(songTitle)
+    console.log(element[0].value.toLowerCase(), songTitle.toLowerCase())
+    if (element[0].value.toLowerCase() === songTitle.toLowerCase()) {
+        songApp.score++
+        return true
+    } else {
+        return false
+    }
+}
+
 // tally up the score
 songApp.tallyScore = () => {
-    songApp.score = 0;
+
     $('.results ol').empty()
     $('.song .userGuess').each(function() {
         let songTitle;
@@ -214,9 +242,7 @@ songApp.tallyScore = () => {
         }
         console.log(songTitle)
         console.log($(this)[0].value.toLowerCase(), songTitle.toLowerCase())
-        if ($(this)[0].value.toLowerCase() === songTitle.toLowerCase()) {
-            songApp.score++
-        }
+
         $('.results .songTitles').append(`<li><p>${songTitle}</p></li>`);
         $('.results .userAnswers').append(`<li><p>${$(this)[0].value}</p></li>`);
         
