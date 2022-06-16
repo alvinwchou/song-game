@@ -29,7 +29,7 @@ body {
         grid-template-columns: 1fr 200px;
         gap: 1rem;
         grid-template-areas:
-            'header x'
+            'header header'
             'text search'
         ;
         h3 {
@@ -46,7 +46,7 @@ body {
             margin: 1rem 0;
         }
         img {
-            width: 100%;
+            width: 200px;
         }
         *{border: 1px solid red;}
     }
@@ -72,17 +72,49 @@ body {
     }
 }
 
-
+// startGame
+.startGame h2 {
+    text-align: center;
+}
 
 // game
-.song {
-    border: 1px solid black;
-    height: 50vh;
+.song, .results {
     margin: 20px;
     background-color: #FFF;
+    // border: 1px solid red;
+    border-radius: 20px;
+    box-shadow: 0px 0px 10px 1px #000000;
     display: flex;
     flex-direction: column;
     justify-content: space-around;
     align-items: center;
+    
+}
+
+.song {
+    height: 50vh;
+    input {
+        border: 5px solid #BEE4E8;
+        border-radius: 15px;
+        padding: 0 1rem;
+    }
+}
+
+
+.results {
+    min-height: 80vh;
+    display: none;
+    justify-content: space-evenly;
+}
+
+.compare, .playAgain {
+    width: 90%;
+    display: flex;
+    justify-content: space-around;
+}
+
+.songTitles, .userAnswers {
+    width: 40%;
+    border: 1px solid red;
 }
 
