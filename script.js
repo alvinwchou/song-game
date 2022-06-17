@@ -111,14 +111,14 @@ songApp.displayTracks = (tracks) => {
     // $('.userGuess').on('focusout', (e) => e.currentTarget.parentElement.previousElementSibling.pause())
     
     // eventListener for when user guess is submitted
-    $('form').on('submit', function(e)  {
+    $('form').on('submit', (e) => {
         e.preventDefault();
         const formEl = e.currentTarget
-        if (songApp.guessCheck(this)) {
+        if (songApp.guessCheck(formEl, false)) {
             clearInterval(songApp.SongCountdownSetInterval)
             songApp.nextSong(formEl);
         } else {
-            this[0].value = ''
+            formEl[0].value = ''
         }
     })
 }
@@ -203,8 +203,9 @@ songApp.songCountdown = (form, div) => {
         i--
         if (i < 0) {
             clearInterval(songApp.SongCountdownSetInterval)
-                songApp.nextSong(form)
-            }
+            songApp.guessCheck(form, true);
+            songApp.nextSong(form);
+        }
     }, 1000)
 }
 
@@ -235,7 +236,7 @@ songApp.nextSong = function(currentTarget) {
     }
 }
 
-songApp.guessCheck = function(element) {
+songApp.guessCheck = function(element, timeup) {
     console.log('guesschekc', element)
     let songTitle;
     // some song titles includes (feat.), we got to take everything before ' (feat.'
@@ -246,10 +247,14 @@ songApp.guessCheck = function(element) {
     }
 
     const userAnswers = element[0].value.toLowerCase()
-    if (userAnswers === songTitle) {
-        songApp.score++
+
+    if (userAnswers === songTitle || timeup) {
         songApp.songTitles.push(songTitle)
         songApp.userAnswers.push(userAnswers)
+        // only add score if they didnt run out of time
+        if(!timeup) {
+            songApp.score++
+        }
         return true
     } else {
         return false
