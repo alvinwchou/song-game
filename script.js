@@ -87,6 +87,9 @@ songApp.displayTracks = (tracks) => {
                 <input type="text" class='userGuess' id='${track.name}' placeholder='Your Guess' disabled>
                 </form>
                 <audio src="${track.preview_url}"></audio>
+                <div class="timer">
+                    <p>30</p>
+                </div>
             </div>`
             
             $('.topSongs').append(divElement);
@@ -97,16 +100,23 @@ songApp.displayTracks = (tracks) => {
 
     // add eventListener to each div element
     //play the song when the text input is focused
-    $('.userGuess').on('focus', (e) => e.currentTarget.parentElement.nextElementSibling.play())
+    $('.userGuess').one('focus', (e) => {
+        e.currentTarget.parentElement.nextElementSibling.play()
+        const timerDiv = e.currentTarget.parentElement.nextElementSibling.nextElementSibling
+        const formEl = e.currentTarget.parentElement
+
+        songApp.songCountdown(formEl, timerDiv);
+    })
+
     // $('.userGuess').on('focusout', (e) => e.currentTarget.parentElement.previousElementSibling.pause())
     
     // eventListener for when user guess is submitted
     $('form').on('submit', function(e)  {
         e.preventDefault();
-        const event = e
-
+        const formEl = e.currentTarget
         if (songApp.guessCheck(this)) {
-            songApp.nextSong(event);
+            clearInterval(songApp.SongCountdownSetInterval)
+            songApp.nextSong(formEl);
         } else {
             this[0].value = ''
         }
@@ -184,25 +194,41 @@ songApp.startGameCountdown = () => {
     
 }
 
+// 30 sec countdown
+songApp.songCountdown = (form, div) => {
+    let i = 29;
+    songApp.SongCountdownSetInterval = setInterval( () => {
+        console.log('countdown')
+        div.innerHTML = `<p>${i}</p>`
+        i--
+        if (i < 0) {
+            clearInterval(songApp.SongCountdownSetInterval)
+                songApp.nextSong(form)
+            }
+    }, 1000)
+}
+
 // play next song
-songApp.nextSong = (e) => {
+songApp.nextSong = function(currentTarget) {
+    console.log('nextSong')
+    console.log(currentTarget) 
 
     // if there is no next element or if the next element isnt a song div
-    if (!e.currentTarget.parentElement.nextSibling || e.currentTarget.parentElement.nextSibling.className !== 'song') {
-        e.currentTarget.children[1].disabled = true;
-        e.currentTarget.nextElementSibling.pause();
+    if (!currentTarget.parentElement.nextSibling || currentTarget.parentElement.nextSibling.className !== 'song') {
+        currentTarget.children[1].disabled = true;
+        currentTarget.nextElementSibling.pause();
         console.log('end of game')
         songApp.tallyScore();
     } else {
 
-        e.currentTarget.children[1].disabled = true; // disable text input
-        e.currentTarget.nextElementSibling.pause(); // pause audio
+        currentTarget.children[1].disabled = true; // disable text input
+        currentTarget.nextElementSibling.pause(); // pause audio
         // enable and focus next text input
-        e.currentTarget.parentElement.nextSibling.children[1].children[1].disabled = false;
-        e.currentTarget.parentElement.nextSibling.children[1].children[1].focus();
+        currentTarget.parentElement.nextSibling.children[1].children[1].disabled = false;
+        currentTarget.parentElement.nextSibling.children[1].children[1].focus();
         // orginally these 2 lines 👆 were below the scrollIntoView. which caused smooth scrolling issues
         // scroll to next song div
-        e.currentTarget.parentElement.nextSibling.scrollIntoView({
+        currentTarget.parentElement.nextSibling.scrollIntoView({
             block: 'center',
             inline: 'center'
         });
@@ -214,14 +240,16 @@ songApp.guessCheck = function(element) {
     let songTitle;
     // some song titles includes (feat.), we got to take everything before ' (feat.'
     if (element[0].id.match('feat')) {
-        songTitle = /.+?(?= \(feat.)/.exec(element[0].id)[0];
+        songTitle = /.+?(?= \(feat.)/.exec(element[0].id)[0].toLowerCase();
     } else {
-        songTitle = element[0].id;
+        songTitle = element[0].id.toLowerCase();
     }
-    console.log(songTitle)
-    console.log(element[0].value.toLowerCase(), songTitle.toLowerCase())
-    if (element[0].value.toLowerCase() === songTitle.toLowerCase()) {
+
+    const userAnswers = element[0].value.toLowerCase()
+    if (userAnswers === songTitle) {
         songApp.score++
+        songApp.songTitles.push(songTitle)
+        songApp.userAnswers.push(userAnswers)
         return true
     } else {
         return false
@@ -232,21 +260,26 @@ songApp.guessCheck = function(element) {
 songApp.tallyScore = () => {
 
     $('.results ol').empty()
-    $('.song .userGuess').each(function() {
-        let songTitle;
-        // some song titles includes (feat.), we got to take everything before ' (feat.'
-        if ($(this)[0].id.match('feat')) {
-            songTitle = /.+?(?= \(feat.)/.exec($(this)[0].id)[0];
-        } else {
-            songTitle = $(this)[0].id;
-        }
-        console.log(songTitle)
-        console.log($(this)[0].value.toLowerCase(), songTitle.toLowerCase())
+    // $('.song .userGuess').each(function() {
+    //     let songTitle;
+    //     // some song titles includes (feat.), we got to take everything before ' (feat.'
+    //     if ($(this)[0].id.match('feat')) {
+    //         songTitle = /.+?(?= \(feat.)/.exec($(this)[0].id)[0];
+    //     } else {
+    //         songTitle = $(this)[0].id;
+    //     }
+    //     console.log(songTitle)
+    //     console.log($(this)[0].value.toLowerCase(), songTitle.toLowerCase())
 
-        $('.results .songTitles').append(`<li><p>${songTitle}</p></li>`);
-        $('.results .userAnswers').append(`<li><p>${$(this)[0].value}</p></li>`);
+    //     $('.results .songTitles').append(`<li><p>${songTitle}</p></li>`);
+    //     $('.results .userAnswers').append(`<li><p>${$(this)[0].value}</p></li>`);
         
-    })
+    // })
+
+    songApp.songTitles.forEach( title => $('.results .songTitles').append(`<li><p>${title}</p></li>`))
+
+    songApp.userAnswers.forEach(answer => $('.results .userAnswers').append(`<li><p>${answer}</p></li>`))
+
     console.log($('.results h2'))
     $('.results h2')[0].innerText = `${songApp.score} out of 10 correct`;
     const scorePhrase = [
@@ -257,6 +290,7 @@ songApp.tallyScore = () => {
         'You Did it!',
         'Not bad at all!',
         'Not bad at all!',
+        'Well Done, Amazing!',
         'Well Done, Amazing!',
         'Well Done, Amazing!',
         'Unbelievable! Perfect Score!'
@@ -279,6 +313,8 @@ songApp.init = () => {
     songApp.getToken();
     songApp.eventListenerSetups();
     songApp.newGame = true;
+    songApp.songTitles = [];
+    songApp.userAnswers = [];
 }
 
 //document ready
