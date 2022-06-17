@@ -95,6 +95,19 @@
 
 .song {
     height: 50vh;
+    position: relative;
+}
+
+.timer {
+    position: absolute;
+    right: 20%;
+    border: 5px solid #BEE4E8;
+    border-radius: 80px;
+    width: 3.5rem;
+    height: 3.5rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 // results

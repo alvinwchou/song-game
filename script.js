@@ -96,7 +96,7 @@ songApp.displayTracks = (tracks) => {
         })
 
     // lower audio volume
-    $('audio').each(function() {$(this)[0].volume = 0.2})
+    $('audio').each(function() {$(this)[0].volume = 0})
 
     // add eventListener to each div element
     //play the song when the text input is focused
