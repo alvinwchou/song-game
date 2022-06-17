@@ -13,8 +13,8 @@ songApp.getToken = () => {
         data: {
             grant_type: 'client_credentials'
         },
-    }).then(data => {
-        songApp.token = data.access_token})
+    }).then(res => {
+        songApp.token = res.access_token})
     .catch(err => {
         if (err.apiData) {
             // Request made and server responded
@@ -70,7 +70,22 @@ songApp.getTopTracks = (id) => {
         headers: {
             'Authorization': `Bearer ${songApp.token}`
         },
-    }).then(data => songApp.tracks = data.tracks)
+    }).then(res => songApp.tracks = res.tracks)
+}
+
+// method to grab some gif
+songApp.getGifhy = () => {
+    $.ajax({
+        url: 'https://api.giphy.com/v1/gifs/search',
+        dataType: 'json',
+        data: {
+            api_key: 'aAGxauRPGaLfiYsdB0fA2OWSQs57k1c9',
+            q: 'thinking hard',
+            rating: 'g',
+            limit: 50,
+            lang: 'en'
+        }
+    }).then( res => songApp.gifs = res.data)
 }
 
 // method which puts track on the DOM
@@ -79,19 +94,23 @@ songApp.displayTracks = (tracks) => {
     $('.topSongs').empty()
 
     tracks.forEach((track, index) => {
-        const divElement =
-            `<div class='song'>
-            <h2>Song ${index+1} of 10 playing</h2>
-            <form action="">
-                <label for="${track.name}">${track.name}</label>
-                <input type="text" class='userGuess' id='${track.name}' placeholder='Your Guess' disabled>
+        const randomIndex = Math.floor(Math.random() * 50)
+        const divElement =`
+            <div class='song'>
+                <h2>Song ${index+1} of 10 playing</h2>
+                <div class="gifContainer">
+                    <img src="${songApp.gifs[randomIndex].images.original.url}" alt="${songApp.gifs[randomIndex].title}" />
+                </div>
+                <form action="">
+                    <label for="${track.name}">${track.name}</label>
+                    <input type="text" class='userGuess' id='${track.name}' placeholder='Your Guess' disabled>
                 </form>
                 <audio src="${track.preview_url}"></audio>
                 <div class="timer">
                     <p>30</p>
                 </div>
-            </div>`
-            
+            </div>
+        `
             $('.topSongs').append(divElement);
         })
 
@@ -320,6 +339,7 @@ songApp.init = () => {
     songApp.newGame = true;
     songApp.songTitles = [];
     songApp.userAnswers = [];
+    songApp.getGifhy()
 }
 
 //document ready

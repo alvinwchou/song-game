@@ -320,7 +320,10 @@ footer {
   align-items: center;
 }
 .topSection .instructions {
+  border-top: 10px solid #BEE4E8;
+  border-bottom: 10px solid #BEE4E8;
   width: 90%;
+  padding-top: 1.5rem;
   margin: 2rem 0;
   display: grid;
   grid-template-columns: 1fr 300px;
@@ -338,7 +341,7 @@ footer {
   text-align: center;
 }
 .topSection input {
-  margin: 2rem 0;
+  margin-top: 2rem;
 }
 .topSection input[type=text] {
   width: 100%;
@@ -395,8 +398,15 @@ footer {
 }
 
 .song {
-  height: 50vh;
+  min-height: 50vh;
   position: relative;
+}
+.song > * {
+  padding: 2rem;
+}
+
+.gifContainer {
+  width: 40%;
 }
 
 .timer {

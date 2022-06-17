@@ -45,16 +45,19 @@
         <section class="game">
             <div class="topSongs">
                 <!-- <div class='song'>
-                        <h2>Song ${index+1} of 10 playing</h2>
-                        <form action="">
-                            <label for="${track.name}">${track.name}</label>
-                            <input type="text" class='userGuess' id='${track.name}' placeholder='Your Guess' disabled>
-                        </form>
-                        <audio src="${track.preview_url}"></audio>
-                        <div class="timer">
-                            <p>30</p>
-                        </div>
-                    </div> -->
+                    <h2>Song ${index+1} of 10 playing</h2>
+                    <div class="gifContainer">
+                        <img src="${songApp.gifs[randomIndex].images.original.url}" alt="${songApp.gifs[randomIndex].title}" />
+                    </div>
+                    <form action="">
+                        <label for="${track.name}">${track.name}</label>
+                        <input type="text" class='userGuess' id='${track.name}' placeholder='Your Guess' disabled>
+                    </form>
+                    <audio src="${track.preview_url}"></audio>
+                    <div class="timer">
+                        <p>30</p>
+                    </div>
+                </div> -->
             </div>
 
             <div class="results">
