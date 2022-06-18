@@ -232,23 +232,27 @@ songApp.songCountdown = (form, div) => {
 songApp.nextSong = function(currentTarget) {
     console.log('nextSong')
     console.log(currentTarget) 
+    console.log(currentTarget.parentElement.nextElementSibling) 
+    console.log(currentTarget.parentElement.nextSibling.className) 
 
     // if there is no next element or if the next element isnt a song div
-    if (!currentTarget.parentElement.nextSibling || currentTarget.parentElement.nextSibling.className !== 'song') {
+    if (!currentTarget.parentElement.nextElementSibling || currentTarget.parentElement.nextElementSibling.className !== 'song') {
         currentTarget.children[1].disabled = true;
         currentTarget.nextElementSibling.pause();
         console.log('end of game')
         songApp.tallyScore();
     } else {
-
+        // form.input
         currentTarget.children[1].disabled = true; // disable text input
+        //form.audio
         currentTarget.nextElementSibling.pause(); // pause audio
         // enable and focus next text input
-        currentTarget.parentElement.nextSibling.children[1].children[1].disabled = false;
-        currentTarget.parentElement.nextSibling.children[1].children[1].focus();
+        // form.song.song.form.input
+        currentTarget.parentElement.nextElementSibling.children[2].children[1].disabled = false;
+        currentTarget.parentElement.nextElementSibling.children[2].children[1].focus();
         // orginally these 2 lines 👆 were below the scrollIntoView. which caused smooth scrolling issues
         // scroll to next song div
-        currentTarget.parentElement.nextSibling.scrollIntoView({
+        currentTarget.parentElement.nextElementSibling.scrollIntoView({
             block: 'center',
             inline: 'center'
         });
