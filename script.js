@@ -46,16 +46,7 @@ songApp.getArtistId = (query) => {
         },
     }).then(data => {
         songApp.getTopTracks(data.artists.items[0].id)
-        console.log(data.artists.items[0].images[0].url)
-        $('.startGame h2')[0].innerText = `${data.artists.items[0].name} - Top 10 Tracks`
-
-        $('.search div').remove();
-        $('.search').append(`
-            <div class="start">
-                <img src="${data.artists.items[0].images[0].url}" alt="Image of ${data.artists.items[0].name}">
-                <button>Start</button>
-            </div>
-        `)
+        songApp.startButton(data.artists.items[0])
     }) // we need to create another method to check if the first item return match's user's query term, if not show a list. But for now assume it matches
 }
 
@@ -88,14 +79,35 @@ songApp.getGifhy = () => {
     }).then( res => songApp.gifs = res.data)
 }
 
+// method which puts the artist picture on the DOM
+songApp.startButton = (artist) => {
+    $('.startGame h2')[0].innerText = `${artist.name} - Top Tracks`
+
+    $('.search div').remove();
+    $('.search').append(`
+            <div class="start">
+                <img src="${artist.images[0].url}" alt="Image of ${artist.name}">
+                <button>Start</button>
+            </div>
+        `)
+}
+
 // method which puts track on the DOM
-songApp.displayTracks = (tracks) => {
+songApp.displayTracks = () => {
     // clear the div of previous songs
     $('.topSongs').empty()
 
+    // create a set of unique random numbers
+    const nums = new Set();
+    while (nums.size !== 5) {
+        nums.add(Math.floor(Math.random() * 5) + 1);
+    }
+    
+    randomIndexArray = [...nums]
+
+
     for (let i = 0; i < 5; i++) {
     // tracks.forEach((track, index) => {
-        const randomTrackIndex = Math.floor(Math.random() * 10)
         const randomGifIndex = Math.floor(Math.random() * 50)
         const divElement =`
             <div class='song'>
@@ -104,10 +116,10 @@ songApp.displayTracks = (tracks) => {
                     <img src="${songApp.gifs[randomGifIndex].images.original.url}" alt="${songApp.gifs[randomGifIndex].title}" />
                 </div>
                 <form action="">
-                    <label for="${songApp.tracks[randomTrackIndex].name}">${songApp.tracks[randomTrackIndex].name}</label>
-                    <input type="text" class='userGuess' id='${songApp.tracks[randomTrackIndex].name}' placeholder='Your Guess' disabled>
+                    <label for="${songApp.tracks[randomIndexArray[i]].name}" class="sr-only">${songApp.tracks[randomIndexArray[i]].name}</label>
+                    <input type="text" class='userGuess' id='${songApp.tracks[randomIndexArray[i]].name}' placeholder='Your Guess' disabled>
                 </form>
-                <audio src="${songApp.tracks[randomTrackIndex].preview_url}"></audio>
+                <audio src="${songApp.tracks[randomIndexArray[i]].preview_url}"></audio>
                 <div class="timer">
                     <p>30</p>
                 </div>
@@ -163,6 +175,7 @@ songApp.eventListenerSetups = () => {
 
     // try again
     $('#tryAgain').on('click', () => {
+        $('.results')[0].style.display = 'none'; // hide the results section
         $(window).scrollTop(0);
         songApp.startGameCountdown();
     })
@@ -176,7 +189,7 @@ songApp.eventListenerSetups = () => {
 
 // start the game
 songApp.startGame = () => {
-    songApp.displayTracks(songApp.tracks);
+    songApp.displayTracks();
 
     // enable text input and focus
     if ($('.userGuess')[0]) {
@@ -289,6 +302,8 @@ songApp.guessCheck = function(element, timeup) {
 // tally up the score
 songApp.tallyScore = () => {
 
+    songApp.newGame = true; // allows the user to click start again at the top of the page
+
     $('.results ol').empty()
     // $('.song .userGuess').each(function() {
     //     let songTitle;
@@ -316,6 +331,7 @@ songApp.tallyScore = () => {
         'Nice Try',
         'You got one!',
         'Not bad at all!',
+        'Well Done, Amazing!',
         'Well Done, Amazing!',
         'Unbelievable! Perfect Score!'
     ]
