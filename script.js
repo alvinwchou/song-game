@@ -93,29 +93,31 @@ songApp.displayTracks = (tracks) => {
     // clear the div of previous songs
     $('.topSongs').empty()
 
-    tracks.forEach((track, index) => {
-        const randomIndex = Math.floor(Math.random() * 50)
+    for (let i = 0; i < 5; i++) {
+    // tracks.forEach((track, index) => {
+        const randomTrackIndex = Math.floor(Math.random() * 10)
+        const randomGifIndex = Math.floor(Math.random() * 50)
         const divElement =`
             <div class='song'>
-                <h2>Song ${index+1} of 10 playing</h2>
+                <h2>Song ${i+1} of 5 playing</h2>
                 <div class="gifContainer">
-                    <img src="${songApp.gifs[randomIndex].images.original.url}" alt="${songApp.gifs[randomIndex].title}" />
+                    <img src="${songApp.gifs[randomGifIndex].images.original.url}" alt="${songApp.gifs[randomGifIndex].title}" />
                 </div>
                 <form action="">
-                    <label for="${track.name}">${track.name}</label>
-                    <input type="text" class='userGuess' id='${track.name}' placeholder='Your Guess' disabled>
+                    <label for="${songApp.tracks[randomTrackIndex].name}">${songApp.tracks[randomTrackIndex].name}</label>
+                    <input type="text" class='userGuess' id='${songApp.tracks[randomTrackIndex].name}' placeholder='Your Guess' disabled>
                 </form>
-                <audio src="${track.preview_url}"></audio>
+                <audio src="${songApp.tracks[randomTrackIndex].preview_url}"></audio>
                 <div class="timer">
                     <p>30</p>
                 </div>
             </div>
         `
             $('.topSongs').append(divElement);
-        })
+        }
 
     // lower audio volume
-    $('audio').each(function() {$(this)[0].volume = 0})
+    $('audio').each(function() {$(this)[0].volume = 0.2})
 
     // add eventListener to each div element
     //play the song when the text input is focused
@@ -309,17 +311,11 @@ songApp.tallyScore = () => {
     songApp.userAnswers.forEach(answer => $('.results .userAnswers').append(`<li><p>${answer}</p></li>`))
 
     console.log($('.results h2'))
-    $('.results h2')[0].innerText = `${songApp.score} out of 10 correct`;
+    $('.results h2')[0].innerText = `${songApp.score} out of 5 correct`;
     const scorePhrase = [
         'Nice Try',
-        'Nice Try',
-        'Nice Try',
-        'Nice Try',
-        'You Did it!',
+        'You got one!',
         'Not bad at all!',
-        'Not bad at all!',
-        'Well Done, Amazing!',
-        'Well Done, Amazing!',
         'Well Done, Amazing!',
         'Unbelievable! Perfect Score!'
     ]
