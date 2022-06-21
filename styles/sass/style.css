@@ -239,8 +239,6 @@ html {
 }
 
 body {
-  width: min(95vw, 1200px);
-  margin: 0 auto;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -313,17 +311,17 @@ footer {
 }
 
 .topSection {
-  margin: 3rem 1rem;
-  display: flex;
   flex-direction: column;
   align-items: center;
+}
+.topSection .title img {
+  width: 100%;
 }
 .topSection .instructions {
   border-top: 10px solid #BEE4E8;
   border-bottom: 10px solid #BEE4E8;
   width: 90%;
   padding-top: 1.5rem;
-  margin: 2rem 0;
   display: grid;
   grid-template-columns: 1fr 300px;
   gap: 1rem;
@@ -349,12 +347,6 @@ footer {
 .topSection input[type=submit] {
   width: 2.5rem;
 }
-.topSection img {
-  width: 200px;
-  margin: 1rem auto;
-  border: 5px solid #BEE4E8;
-  border-radius: 15px;
-}
 .topSection form {
   display: flex;
   justify-content: center;
@@ -362,10 +354,26 @@ footer {
 .topSection form input {
   width: 100%;
 }
-.topSection .start {
+
+.features {
+  display: flex;
+  justify-content: space-evenly;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.start img {
+  width: 200px;
+  margin: 1rem auto;
+  border: 5px solid #BEE4E8;
+  border-radius: 15px;
+}
+
+.start {
   position: relative;
 }
-.topSection .countdown {
+
+.countdown {
   position: absolute;
   top: 0;
   left: 0;
@@ -375,7 +383,7 @@ footer {
   justify-content: center;
   align-items: center;
 }
-.topSection .countdown p {
+.countdown p {
   font-size: 10rem;
   text-shadow: 0px 0px 20px #BEE4E8;
   line-height: 0;
