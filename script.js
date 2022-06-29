@@ -60,7 +60,7 @@ songApp.getPlaylist = (id) => {
         },
     }).then(res => songApp.featArtists(res.tracks.items))
 }
-
+//start
 // method to put the top 8 artists from toplists playlist on DOM
 songApp.featArtists = (artistInfo) => {
     console.log(artistInfo)
@@ -73,13 +73,29 @@ songApp.featArtists = (artistInfo) => {
             </div>
         `)
         
+        
         console.log(artistInfo[i].track.album.images[0].url)
         console.log(artistInfo[i].track.artists[0].name)
     }
+//start
+    $('.start').on('click', function (e) {
+        console.log(e)
+        console.log(this.children[1].textContent)
+        const artistName = this.children[1].textContent
+        console.log(artistName)
+        if (e.target.tagName === 'BUTTON' && songApp.newGame) {
+            songApp.newGame = false; // this stops the user from starting over 
+            songApp.score = 0;
+            songApp.startGameCountdown();
+            songApp.getArtistId(artistName, false)
+        }
+    })
 }
 
+
+
 // method to get artist id
-songApp.getArtistId = (query) => {
+songApp.getArtistId = (query, fromSearchBar = true) => {
     $.ajax({
         url: `${songApp.spotifyUrl}/search`,
         dataType: 'json',
@@ -92,7 +108,9 @@ songApp.getArtistId = (query) => {
         },
     }).then(data => {
         songApp.getTopTracks(data.artists.items[0].id)
-        songApp.startButton(data.artists.items)
+        if(fromSearchBar){
+            songApp.goButton(data.artists.items)
+        }
     })
 }
 
@@ -126,7 +144,7 @@ songApp.getGifhy = () => {
 }
 
 // method which puts the artist picture on the DOM
-songApp.startButton = (artists) => {
+songApp.goButton = (artists) => {
 
     $('.artistTitle')[0].innerText = `${artists[0].name} - Top Tracks`
 
@@ -137,7 +155,7 @@ songApp.startButton = (artists) => {
         $('.features').append(`
             <div class="start">
                 <img src="${artists[0].images[0].url}" alt="Image of ${artists[0].name}">
-                <p>${artists[i].name}</p>
+                <p>${artists[0].name}</p>
                 <button>Start</button>
             </div>
         `)
@@ -217,7 +235,7 @@ songApp.displayTracks = () => {
         }
     })
 }
-
+//start
 // events
 songApp.eventListenerSetups = () => {
     // get user query for artist
@@ -226,9 +244,10 @@ songApp.eventListenerSetups = () => {
         songApp.getArtistId($('#artistName').val());
     })
 
-    // run startGame method
-    $('.features').on('click', (e) => {
+    // start the game
+    $('.features').on('click', function(e) {
         console.log(e)
+        console.log(this)
         if (e.target.tagName === 'BUTTON' && songApp.newGame) {
             songApp.newGame = false; // this stops the user from starting over 
             songApp.score = 0;
@@ -239,14 +258,14 @@ songApp.eventListenerSetups = () => {
     // try again
     $('#tryAgain').on('click', () => {
         $('.results')[0].style.display = 'none'; // hide the results section
-        $(window).scrollTop(0);
+        $('.search').scrollTop(0);
         songApp.startGameCountdown();
     })
     
     // new artist
     $('#newArtist').on('click', () => {
         $('#artistName').val('').focus();
-        $(window).scrollTop(0);
+        $('.featureSection').scrollTop(0);
     })
 }
 
@@ -340,7 +359,7 @@ songApp.nextSong = function(currentTarget) {
 songApp.guessCheck = function(element, timeup) {
     console.log('guesschekc', element)
     let songTitle;
-    // some song titles includes (feat.), we got to take everything before ' (feat.'
+    // some song titles includes (feat..., we got to take everything before ' (feat.'
     if (element[0].id.match('feat')) {
         songTitle = /.+?(?= \(feat.)/.exec(element[0].id)[0].toLowerCase();
     } else {
