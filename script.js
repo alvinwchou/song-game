@@ -34,7 +34,6 @@ songApp.getToken = () => {
     })
 }
 
-
 // method to get toplists playlist id
 songApp.getToplistsPlaylistId = () => {
     $.ajax({
@@ -60,36 +59,47 @@ songApp.getPlaylist = (id) => {
         },
     }).then(res => songApp.featArtists(res.tracks.items))
 }
-//start
+
 // method to put the top 8 artists from toplists playlist on DOM
 songApp.featArtists = (artistInfo) => {
     console.log(artistInfo)
     for (let i = 0; i < 8; i++) {
         $('.features').append(`
-            <div class="start">
+            <div class="featArtist">
                 <img src="${artistInfo[i].track.album.images[0].url}" alt="Image of ${artistInfo[i].track.artists[0].name}">
                 <p>${artistInfo[i].track.artists[0].name}</p>
-                <button>Start</button>
+                <button>Select</button>
             </div>
         `)
         
         
-        console.log(artistInfo[i].track.album.images[0].url)
-        console.log(artistInfo[i].track.artists[0].name)
+        // console.log(artistInfo[i].track.album.images[0].url)
+        // console.log(artistInfo[i].track.artists[0].name)
     }
-//start
-    $('.start').on('click', function (e) {
+
+    $('.featArtist').on('click', function (e) {
         console.log(e)
         console.log(this.children[1].textContent)
         const artistName = this.children[1].textContent
         console.log(artistName)
         if (e.target.tagName === 'BUTTON' && songApp.newGame) {
-            songApp.newGame = false; // this stops the user from starting over 
-            songApp.score = 0;
-            songApp.startGameCountdown();
+            console.log(artistName)
             songApp.getArtistId(artistName, false)
+
         }
     })
+    // $('.start').on('click', function (e) {
+    //     console.log(e)
+    //     console.log(this.children[1].textContent)
+    //     const artistName = this.children[1].textContent
+    //     console.log(artistName)
+    //     if (e.target.tagName === 'BUTTON' && songApp.newGame) {
+    //         songApp.newGame = false; // this stops the user from starting over 
+    //         songApp.score = 0;
+    //         songApp.startGameCountdown();
+    //         songApp.getArtistId(artistName, false)
+    //     }
+    // })
 }
 
 
@@ -108,9 +118,12 @@ songApp.getArtistId = (query, fromSearchBar = true) => {
         },
     }).then(data => {
         songApp.getTopTracks(data.artists.items[0].id)
-        if(fromSearchBar){
-            songApp.goButton(data.artists.items)
-        }
+        songApp.startGameHeader(data.artists.items[0])
+        // console.log(data.artists.items[0].name)
+        // console.log(data.artists.items[0].images[0])
+        // if(fromSearchBar){
+        //     songApp.goButton(data.artists.items)
+        // }
     })
 }
 
@@ -141,6 +154,21 @@ songApp.getGifhy = () => {
             lang: 'en'
         }
     }).then( res => songApp.gifs = res.data)
+}
+
+// method to put selected artist details on DOM
+songApp.startGameHeader = (artist) => {
+    $('.startGame').empty();
+    console.log(artist.name)
+    console.log(artist.images[0])
+    const element = `
+        <h2 class="artistTitle">${artist.name} - Top Tracks</h2>
+        <div class="imgContainer">
+            <img src="${artist.images[0].url}" alt="Image of ${artist.name}"></img>
+        </div>
+        <button>Start</button>
+    `
+    $('.startGame').append(element);
 }
 
 // method which puts the artist picture on the DOM
@@ -245,7 +273,7 @@ songApp.eventListenerSetups = () => {
     })
 
     // start the game
-    $('.features').on('click', function(e) {
+    $('.startGame').on('click', function(e) {
         console.log(e)
         console.log(this)
         if (e.target.tagName === 'BUTTON' && songApp.newGame) {
@@ -296,7 +324,7 @@ songApp.startGameCountdown = () => {
             </div>
         `
         
-        $('.start').append(divEl);
+        $('.startGame .imgContainer').append(divEl);
         
         count--;
         

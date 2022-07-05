@@ -337,14 +337,25 @@ footer {
   background-color: #dfdfdf;
 }
 
-.start img {
+.featArtist img {
   width: 200px;
   margin: 1rem auto;
   border: 5px solid #6565ff;
   border-radius: 15px;
 }
 
-.start {
+.startGame {
+  margin: 3rem 0;
+}
+
+.startGame img {
+  width: 200px;
+  margin: 1rem auto;
+  border: 5px solid #6565ff;
+  border-radius: 15px;
+}
+
+.startGame .imgContainer {
   position: relative;
 }
 
@@ -362,10 +373,6 @@ footer {
   font-size: 10rem;
   text-shadow: 0px 0px 20px #6565ff;
   line-height: 0;
-}
-
-.startGame {
-  margin: 3rem 0;
 }
 
 .song, .results {
