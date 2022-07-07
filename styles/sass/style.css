@@ -264,12 +264,17 @@ button, input[type=submit] {
 
 button {
   padding: 0.1rem 1rem;
+  cursor: pointer;
 }
 
 input[type=text] {
   border: 5px solid #BEE4E8;
   border-radius: 15px;
   padding: 0 1rem;
+}
+
+input[type=submit] {
+  cursor: pointer;
 }
 
 html {
@@ -335,6 +340,7 @@ footer {
   flex-wrap: wrap;
   gap: 1rem;
   background-color: #dfdfdf;
+  padding-bottom: 1rem;
 }
 
 .featArtist img {
@@ -357,6 +363,13 @@ footer {
 
 .startGame .imgContainer {
   position: relative;
+}
+
+.imgContainer button {
+  position: absolute;
+  bottom: 10px;
+  right: 50%;
+  transform: translateX(50%);
 }
 
 .countdown {

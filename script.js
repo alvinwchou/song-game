@@ -84,6 +84,8 @@ songApp.featArtists = (artistInfo) => {
         console.log(artistName)
         if (e.target.tagName === 'BUTTON' && songApp.newGame) {
             console.log(artistName)
+            console.log($('.startGame')[0].scrollHeight)
+            $('.startGame').scrollTop($('.startGame')[0].scrollHeight);
             songApp.getArtistId(artistName, false)
 
         }
@@ -119,11 +121,11 @@ songApp.getArtistId = (query, fromSearchBar = true) => {
     }).then(data => {
         songApp.getTopTracks(data.artists.items[0].id)
         songApp.startGameHeader(data.artists.items[0])
-        // console.log(data.artists.items[0].name)
-        // console.log(data.artists.items[0].images[0])
-        // if(fromSearchBar){
-        //     songApp.goButton(data.artists.items)
-        // }
+        console.log(data.artists.items[0].name)
+        console.log(data.artists.items[0].images[0])
+        if(fromSearchBar){
+            songApp.goButton(data.artists.items)
+        }
     })
 }
 
@@ -165,8 +167,8 @@ songApp.startGameHeader = (artist) => {
         <h2 class="artistTitle">${artist.name} - Top Tracks</h2>
         <div class="imgContainer">
             <img src="${artist.images[0].url}" alt="Image of ${artist.name}"></img>
+            <button>Start</button>
         </div>
-        <button>Start</button>
     `
     $('.startGame').append(element);
 }
@@ -174,32 +176,34 @@ songApp.startGameHeader = (artist) => {
 // method which puts the artist picture on the DOM
 songApp.goButton = (artists) => {
 
-    $('.artistTitle')[0].innerText = `${artists[0].name} - Top Tracks`
+    // $('.artistTitle')[0].innerText = `${artists[0].name} - Top Tracks`
 
     $('.features').empty();
 
-    // if the first return matches user search
-    if ($('#artistName').val().toLowerCase() == artists[0].name.toLowerCase()) {
-        $('.features').append(`
-            <div class="start">
-                <img src="${artists[0].images[0].url}" alt="Image of ${artists[0].name}">
-                <p>${artists[0].name}</p>
-                <button>Start</button>
-            </div>
-        `)
-    } else {
         // return the top 4 results
         for (let i = 0; i < 4; i++) {
         // artists.forEach(artist => {
             $('.features').append(`
-                <div class="start">
+                <div class="featArtist">
                     <img src="${artists[i].images[0].url}" alt="Image of ${artists[i].name}">
                     <p>${artists[i].name}</p>
-                    <button>Start</button>
+                    <button>Select</button>
                 </div>
             `)
         }
-    }
+
+        $('.featArtist').on('click', function (e) {
+            console.log(e)
+            console.log(this.children[1].textContent)
+            const artistName = this.children[1].textContent
+            console.log(artistName)
+            if (e.target.tagName === 'BUTTON' && songApp.newGame) {
+                console.log(artistName)
+                songApp.getArtistId(artistName, false)
+
+            }
+        })
+
 }
 
 // method which puts track on the DOM
@@ -269,6 +273,7 @@ songApp.eventListenerSetups = () => {
     // get user query for artist
     $('form').on('submit', (e) => {
         e.preventDefault();
+        console.log('form')
         songApp.getArtistId($('#artistName').val());
     })
 
@@ -286,14 +291,13 @@ songApp.eventListenerSetups = () => {
     // try again
     $('#tryAgain').on('click', () => {
         $('.results')[0].style.display = 'none'; // hide the results section
-        $('.search').scrollTop(0);
+        $('.featureSection').scrollTop(0);
         songApp.startGameCountdown();
     })
     
     // new artist
     $('#newArtist').on('click', () => {
         $('#artistName').val('').focus();
-        $('.featureSection').scrollTop(0);
     })
 }
 

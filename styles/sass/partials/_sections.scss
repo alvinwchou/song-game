@@ -77,6 +77,7 @@
     flex-wrap: wrap;
     gap: 1rem;
     background-color: #dfdfdf;
+    padding-bottom: 1rem;
 }
 .featArtist img {
     width: 200px;
@@ -97,6 +98,12 @@
 }
 .startGame .imgContainer{
     position: relative;
+}
+.imgContainer button {
+    position: absolute;
+    bottom: 10px;
+    right: 50%;
+    transform: translateX(50%);
 }
 .countdown {
     position: absolute;
