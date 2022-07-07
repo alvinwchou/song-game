@@ -235,12 +235,9 @@ template {
 
 html {
   font-size: 125%;
-  background-color: #FFF8DB;
 }
 
 body {
-  width: min(95vw, 1200px);
-  margin: 0 auto;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -267,12 +264,17 @@ button, input[type=submit] {
 
 button {
   padding: 0.1rem 1rem;
+  cursor: pointer;
 }
 
 input[type=text] {
   border: 5px solid #BEE4E8;
   border-radius: 15px;
   padding: 0 1rem;
+}
+
+input[type=submit] {
+  cursor: pointer;
 }
 
 html {
@@ -297,9 +299,6 @@ h2 {
 h3 {
   font-size: 2rem;
   text-align: center;
-}
-
-.instructions p {
   padding: 2rem 0;
 }
 
@@ -313,59 +312,67 @@ footer {
 }
 
 .topSection {
-  margin: 3rem 1rem;
-  display: flex;
   flex-direction: column;
   align-items: center;
 }
-.topSection .instructions {
-  border-top: 10px solid #BEE4E8;
-  border-bottom: 10px solid #BEE4E8;
-  width: 90%;
-  padding-top: 1.5rem;
-  margin: 2rem 0;
-  display: grid;
-  grid-template-columns: 1fr 300px;
-  gap: 1rem;
-  grid-template-areas: "header header" "text search";
+.topSection .title img {
+  width: 100%;
 }
-.topSection .instructions h3 {
-  grid-area: header;
+.topSection .instructions {
+  margin: 0 auto;
 }
 .topSection .instructions ol {
-  grid-area: text;
+  background-color: #dfdfdf;
 }
-.topSection .instructions .search {
-  grid-area: search;
-  text-align: center;
+.topSection .instructions li {
+  padding: 1rem 0 1rem 2rem;
 }
-.topSection input {
-  margin-top: 2rem;
-}
-.topSection input[type=text] {
-  width: 100%;
-  margin-right: 1rem;
-}
-.topSection input[type=submit] {
-  width: 2.5rem;
-}
-.topSection img {
-  width: 200px;
-  margin: 1rem auto;
-  border: 5px solid #BEE4E8;
-  border-radius: 15px;
-}
-.topSection form {
+
+.search {
+  padding: 2rem 0;
   display: flex;
   justify-content: center;
 }
-.topSection form input {
-  width: 100%;
+
+.features {
+  display: flex;
+  justify-content: space-evenly;
+  flex-wrap: wrap;
+  gap: 1rem;
+  background-color: #dfdfdf;
+  padding-bottom: 1rem;
 }
-.topSection .start {
+
+.featArtist img {
+  width: 200px;
+  margin: 1rem auto;
+  border: 5px solid #6565ff;
+  border-radius: 15px;
+}
+
+.startGame {
+  margin: 3rem 0;
+}
+
+.startGame img {
+  width: 200px;
+  margin: 1rem auto;
+  border: 5px solid #6565ff;
+  border-radius: 15px;
+}
+
+.startGame .imgContainer {
   position: relative;
 }
-.topSection .countdown {
+
+.imgContainer button {
+  position: absolute;
+  bottom: 10px;
+  right: 50%;
+  transform: translateX(50%);
+}
+
+.countdown {
   position: absolute;
   top: 0;
   left: 0;
@@ -375,14 +382,10 @@ footer {
   justify-content: center;
   align-items: center;
 }
-.topSection .countdown p {
+.countdown p {
   font-size: 10rem;
-  text-shadow: 0px 0px 20px #BEE4E8;
+  text-shadow: 0px 0px 20px #6565ff;
   line-height: 0;
-}
-
-.startGame {
-  margin: 3rem 0;
 }
 
 .song, .results {
@@ -411,7 +414,7 @@ footer {
 .timer {
   position: absolute;
   right: 20%;
-  border: 5px solid #BEE4E8;
+  border: 5px solid #6565ff;
   border-radius: 80px;
   width: 3.5rem;
   height: 3.5rem;

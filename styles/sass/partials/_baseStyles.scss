@@ -8,13 +8,13 @@
 
 html {
     font-size: 125%;
-    background-color: #FFF8DB;
+    // background-color: #FFF8DB;
 }
 
 body {
     // border: 1px solid red;
-    width: min(95vw, 1200px);
-    margin: 0 auto;
+    // width: min(95vw, 1200px);
+    // margin: 0 auto;
     min-height: 100vh;
     display: flex;
     flex-direction: column;
@@ -42,10 +42,15 @@ button, input[type=submit] {
 
 button {
     padding: 0.1rem 1rem;
+    cursor: pointer;
 }
 
 input[type=text] {
     border: 5px solid #BEE4E8;
     border-radius: 15px;
     padding: 0 1rem;
+}
+
+input[type=submit] {
+    cursor: pointer;
 }

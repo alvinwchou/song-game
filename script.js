@@ -14,7 +14,9 @@ songApp.getToken = () => {
             grant_type: 'client_credentials'
         },
     }).then(res => {
-        songApp.token = res.access_token})
+        songApp.token = res.access_token;
+        songApp.getToplistsPlaylistId();
+    })
     .catch(err => {
         if (err.apiData) {
             // Request made and server responded
@@ -32,8 +34,80 @@ songApp.getToken = () => {
     })
 }
 
+// method to get toplists playlist id
+songApp.getToplistsPlaylistId = () => {
+    $.ajax({
+        // url: `${songApp.spotifyUrl}/browse/categories/`,
+        url: `${songApp.spotifyUrl}/browse/categories/toplists/playlists`,
+        dataType: 'json',
+        data: {
+            country: 'US'
+        },
+        headers: {
+            'Authorization': `Bearer ${songApp.token}`
+        },
+    }).then(res => songApp.getPlaylist(res.playlists.items[0].id))
+}
+
+// method to get toplists playlist info by id
+songApp.getPlaylist = (id) => {
+    $.ajax({
+        url: `${songApp.spotifyUrl}/playlists/${id}`,
+        dataType: 'json',
+        headers: {
+            'Authorization': `Bearer ${songApp.token}`
+        },
+    }).then(res => songApp.featArtists(res.tracks.items))
+}
+
+// method to put the top 8 artists from toplists playlist on DOM
+songApp.featArtists = (artistInfo) => {
+    console.log(artistInfo)
+    for (let i = 0; i < 8; i++) {
+        $('.features').append(`
+            <div class="featArtist">
+                <img src="${artistInfo[i].track.album.images[0].url}" alt="Image of ${artistInfo[i].track.artists[0].name}">
+                <p>${artistInfo[i].track.artists[0].name}</p>
+                <button>Select</button>
+            </div>
+        `)
+        
+        
+        // console.log(artistInfo[i].track.album.images[0].url)
+        // console.log(artistInfo[i].track.artists[0].name)
+    }
+
+    $('.featArtist').on('click', function (e) {
+        console.log(e)
+        console.log(this.children[1].textContent)
+        const artistName = this.children[1].textContent
+        console.log(artistName)
+        if (e.target.tagName === 'BUTTON' && songApp.newGame) {
+            console.log(artistName)
+            console.log($('.startGame')[0].scrollHeight)
+            $('.startGame').scrollTop($('.startGame')[0].scrollHeight);
+            songApp.getArtistId(artistName, false)
+
+        }
+    })
+    // $('.start').on('click', function (e) {
+    //     console.log(e)
+    //     console.log(this.children[1].textContent)
+    //     const artistName = this.children[1].textContent
+    //     console.log(artistName)
+    //     if (e.target.tagName === 'BUTTON' && songApp.newGame) {
+    //         songApp.newGame = false; // this stops the user from starting over 
+    //         songApp.score = 0;
+    //         songApp.startGameCountdown();
+    //         songApp.getArtistId(artistName, false)
+    //     }
+    // })
+}
+
+
+
 // method to get artist id
-songApp.getArtistId = (query) => {
+songApp.getArtistId = (query, fromSearchBar = true) => {
     $.ajax({
         url: `${songApp.spotifyUrl}/search`,
         dataType: 'json',
@@ -46,8 +120,13 @@ songApp.getArtistId = (query) => {
         },
     }).then(data => {
         songApp.getTopTracks(data.artists.items[0].id)
-        songApp.startButton(data.artists.items[0])
-    }) // we need to create another method to check if the first item return match's user's query term, if not show a list. But for now assume it matches
+        songApp.startGameHeader(data.artists.items[0])
+        console.log(data.artists.items[0].name)
+        console.log(data.artists.items[0].images[0])
+        if(fromSearchBar){
+            songApp.goButton(data.artists.items)
+        }
+    })
 }
 
 // method to get artist's top tracks
@@ -79,17 +158,52 @@ songApp.getGifhy = () => {
     }).then( res => songApp.gifs = res.data)
 }
 
-// method which puts the artist picture on the DOM
-songApp.startButton = (artist) => {
-    $('.startGame h2')[0].innerText = `${artist.name} - Top Tracks`
+// method to put selected artist details on DOM
+songApp.startGameHeader = (artist) => {
+    $('.startGame').empty();
+    console.log(artist.name)
+    console.log(artist.images[0])
+    const element = `
+        <h2 class="artistTitle">${artist.name} - Top Tracks</h2>
+        <div class="imgContainer">
+            <img src="${artist.images[0].url}" alt="Image of ${artist.name}"></img>
+            <button>Start</button>
+        </div>
+    `
+    $('.startGame').append(element);
+}
 
-    $('.search div').remove();
-    $('.search').append(`
-            <div class="start">
-                <img src="${artist.images[0].url}" alt="Image of ${artist.name}">
-                <button>Start</button>
-            </div>
-        `)
+// method which puts the artist picture on the DOM
+songApp.goButton = (artists) => {
+
+    // $('.artistTitle')[0].innerText = `${artists[0].name} - Top Tracks`
+
+    $('.features').empty();
+
+        // return the top 4 results
+        for (let i = 0; i < 4; i++) {
+        // artists.forEach(artist => {
+            $('.features').append(`
+                <div class="featArtist">
+                    <img src="${artists[i].images[0].url}" alt="Image of ${artists[i].name}">
+                    <p>${artists[i].name}</p>
+                    <button>Select</button>
+                </div>
+            `)
+        }
+
+        $('.featArtist').on('click', function (e) {
+            console.log(e)
+            console.log(this.children[1].textContent)
+            const artistName = this.children[1].textContent
+            console.log(artistName)
+            if (e.target.tagName === 'BUTTON' && songApp.newGame) {
+                console.log(artistName)
+                songApp.getArtistId(artistName, false)
+
+            }
+        })
+
 }
 
 // method which puts track on the DOM
@@ -105,9 +219,7 @@ songApp.displayTracks = () => {
     
     randomIndexArray = [...nums]
 
-
     for (let i = 0; i < 5; i++) {
-    // tracks.forEach((track, index) => {
         const randomGifIndex = Math.floor(Math.random() * 50)
         const divElement =`
             <div class='song'>
@@ -155,17 +267,20 @@ songApp.displayTracks = () => {
         }
     })
 }
-
+//start
 // events
 songApp.eventListenerSetups = () => {
     // get user query for artist
     $('form').on('submit', (e) => {
         e.preventDefault();
+        console.log('form')
         songApp.getArtistId($('#artistName').val());
     })
 
-    // run startGame method
-    $('.search').on('click', (e) => {
+    // start the game
+    $('.startGame').on('click', function(e) {
+        console.log(e)
+        console.log(this)
         if (e.target.tagName === 'BUTTON' && songApp.newGame) {
             songApp.newGame = false; // this stops the user from starting over 
             songApp.score = 0;
@@ -176,14 +291,13 @@ songApp.eventListenerSetups = () => {
     // try again
     $('#tryAgain').on('click', () => {
         $('.results')[0].style.display = 'none'; // hide the results section
-        $(window).scrollTop(0);
+        $('.featureSection').scrollTop(0);
         songApp.startGameCountdown();
     })
     
     // new artist
     $('#newArtist').on('click', () => {
         $('#artistName').val('').focus();
-        $(window).scrollTop(0);
     })
 }
 
@@ -209,12 +323,12 @@ songApp.startGameCountdown = () => {
     const countdown = setInterval(() => {
         $('.countdown').remove();
         const divEl = `
-        <div class="countdown">
-        <p>${count}</p>
-        </div>
+            <div class="countdown">
+                <p>${count}</p>
+            </div>
         `
         
-        $('.start').append(divEl);
+        $('.startGame .imgContainer').append(divEl);
         
         count--;
         
@@ -277,7 +391,7 @@ songApp.nextSong = function(currentTarget) {
 songApp.guessCheck = function(element, timeup) {
     console.log('guesschekc', element)
     let songTitle;
-    // some song titles includes (feat.), we got to take everything before ' (feat.'
+    // some song titles includes (feat..., we got to take everything before ' (feat.'
     if (element[0].id.match('feat')) {
         songTitle = /.+?(?= \(feat.)/.exec(element[0].id)[0].toLowerCase();
     } else {
